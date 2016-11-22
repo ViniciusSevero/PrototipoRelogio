@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cronometro</title>
+    <style>
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul > li {
+            font-size: 30px;
+            font-family: Tahoma;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .relogio {
+            width: 500px;
+            height: 500px;
+            border: solid 30px #000;
+            border-radius: 50%;
+            margin: 10px auto;
+            position: relative;
+            background: url('fundo2.png');
+        }
+
+        .digital {
+            width: 123px;
+            margin: 0 auto;
+        }
+
+        .hub {
+            width: 218px;
+            margin: 0 auto;
+        }
+
+        #ponteiroSegundo {
+            width: 6px;
+            height: 210px; /* metade width do relogio - margin do ponteiro * 2*/
+            background-color: coral;
+            margin: 40px 247px; /* (width relogio - width ponteiro) / 2*/
+            position: absolute;
+            box-shadow: 1px 1px 2px;
+            border-radius: 10px;
+            transform-origin: 3px bottom;
+        }
+
+        #ponteiroMinuto {
+            width: 16px;
+            height: 210px;
+            background-color: #000;
+            margin: 40px 242px;
+            position: absolute;
+            box-shadow: 1px 1px 2px;
+            border-radius: 10px;
+            transform-origin: 8px bottom; /* rodar na metade do width(centro do ponteiro)*/
+        }
+
+        #ponteiroHora {
+            width: 16px;
+            height: 105px;
+            background-color: #000;
+            margin: 145px 242px;
+            position: absolute;
+            box-shadow: 1px 1px 2px;
+            border-radius: 10px;
+            transform-origin: 8px bottom; /* rodar na metade do width(centro do ponteiro)*/
+        }
+
+        #centro {
+            width: 30px;
+            height: 30px;
+            background-color: #000;
+            margin: 235px 235px;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .btn{
+            min-width:70px;
+            padding:5px;
+            background:#808080;
+            border:1px solid black;
+            text-align:center;
+            color:white;
+            font-family:Tahoma;
+            font-size:20px;
+            cursor:pointer;
+        }
+
+        .btn-success{
+            background-color:forestgreen;
+        }
+        .btn-danger {
+            background-color:red;
+        }
+    </style>
+</head>
+<body>
+    <!-- relogio -->
+    <div class="relogio">
+        <div id="ponteiroSegundo"></div>
+        <div id="ponteiroMinuto"></div>
+        <div id="ponteiroHora"></div>
+        <div id="centro"></div>
+    </div>
+
+
+    <ul class="digital">
+        <li id="horas">00</li>
+        <li id="minutos">00</li>
+        <li id="segundos">00</li>
+    </ul>
+
+    <div class="hub">
+        <button id="start" onclick="start()" class="btn btn-success"><img src="icons/play.png" /></button>
+        <button id="stop" onclick="stop()" class="btn btn-danger"><img src="icons/stop.png" /></button>
+        <button id="pause" onclick="pause()" class="btn"><img src="icons/pause.png" /></button>
+    </div>
+    <button onclick="trocarFundo()">Trocar Fundo</button>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+    var h = 0;
+    var m = 0;
+    var s = 0;
+    var timer;
+    var fundo = 0;
+    function tempo() {
+        if (h == 23 && m == 59 && s == 59) {
+            h = 0;
+            m = 0;
+            s = 0;
+        } else if (m == 59 && s == 59) {
+            m = 0;
+            s = 0;
+            h++;
+        } else if (s == 59) {
+            s = 0;
+            m++;
+        } else {
+            s++;
+        }
+
+        atualizarElementos();
+    }
+
+    function start() {
+        timer = setInterval('tempo()', 1000);
+        document.getElementById("start").disabled = true;
+    }
+
+    function stop() {
+        clearInterval(timer);
+        document.getElementById("start").disabled = false;
+        h = 0;
+        m = 0;
+        s = 0;
+
+        atualizarElementos();
+    }
+
+    function pause() {
+        clearInterval(timer);
+        document.getElementById("start").disabled = false;
+    }
+
+    function atualizarElementos() {
+        $("#ponteiroSegundo").css("transform", "rotate(" + (s * 6) + "deg)");
+        $("#ponteiroMinuto").css("transform", "rotate(" + (m * 6) + "deg)");
+        $("#ponteiroHora").css("transform", "rotate(" + (h * 30) + "deg)");
+
+        if (h < 10) {
+            document.getElementById('horas').innerHTML = '0' + h;
+        } else {
+            document.getElementById('horas').innerHTML = h;
+        }
+
+        if (m < 10) {
+            document.getElementById('minutos').innerHTML = '0' + m;
+        } else {
+            document.getElementById('minutos').innerHTML = m;
+        }
+
+        if (s < 10) {
+            document.getElementById('segundos').innerHTML = '0' + s;
+        } else {
+            document.getElementById('segundos').innerHTML = s;
+        }
+
+    }
+
+    function trocarFundo() {
+        fundo++;
+        if (fundo % 2 == 0) {
+            $(".relogio").css("background", "url('fundo2.png')");
+        } else {
+            $(".relogio").css("background", "url('fundo1.png')");
+        }
+    }
+</script>
