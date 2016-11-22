@@ -97,6 +97,13 @@
     </style>
 </head>
 <body>
+
+    <div>
+        <label for="tempoAlarme">Tempo para estudar em minutos:</label>
+        <input type="text" id="tempoAlarme"/>
+        <button onclick="setarTempoAlarme(tempoAlarme.value)">Definir</button>
+    </div>
+
     <!-- relogio -->
     <div class="relogio">
         <div id="ponteiroSegundo"></div>
@@ -118,15 +125,28 @@
         <button id="pause" onclick="pause()" class="btn"><img src="icons/pause.png" /></button>
     </div>
     <button onclick="trocarFundo()">Trocar Fundo</button>
+
+    <audio id="audio">
+        <source src="audio/03.Nemesis.mp3" type="audio/mp3" />
+    </audio>
 </body>
 </html>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script type="text/javascript">
     var h = 0;
     var m = 0;
-    var s = 0;
+    var s = 55;
     var timer;
     var fundo = 0;
+    var tempoAlarmeMin;
+
+    var audio = document.getElementById('audio');
+
+    function play() {
+        audio.play();
+    }
+
+
     function tempo() {
         if (h == 23 && m == 59 && s == 59) {
             h = 0;
@@ -144,6 +164,18 @@
         }
 
         atualizarElementos();
+
+
+        var tempoCorridoMin = (h * 60) + m;
+        if (tempoCorridoMin == tempoAlarmeMin) {
+            play();
+            alert("Acabou o tempo!");
+            pause();
+        }
+    }
+
+    function setarTempoAlarme(min) {
+        tempoAlarmeMin = min;
     }
 
     function start() {
